@@ -14,6 +14,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Vector;
 
+
+//客户界面
 public class CustomerLayout {
 
     private JTabbedPane tabbedPane;
@@ -174,14 +176,7 @@ public class CustomerLayout {
         JLabel idcard_v=new JLabel("",JLabel.CENTER);
         JLabel name_k=new JLabel("姓名",JLabel.CENTER);
         JLabel name_v=new JLabel("",JLabel.CENTER);
-        panel3_1.add(LvipCard);
-        panel3_1.add(TvipCard);
-        panel3_1.add(discount_k);
-        panel3_1.add(discount_v);
-        panel3_1.add(idcard_k);
-        panel3_1.add(idcard_v);
-        panel3_1.add(name_k);
-        panel3_1.add(name_v);
+        addComponent(panel3_1,new JComponent[]{LvipCard,TvipCard,discount_k,discount_v,idcard_k,idcard_v,name_k,name_v});
         panel3.add(panel3_1,BorderLayout.CENTER);
         border=BorderFactory.createTitledBorder(etched,"贵宾卡");
         panel3.setBorder(border);
@@ -356,5 +351,10 @@ public class CustomerLayout {
         return panel_main;
     }
 
+    private void addComponent(JPanel panel,JComponent [] components){
+        for(int i=0;i<components.length;i++){
+            panel.add(components[i]);
+        }
+    }
 
 }
