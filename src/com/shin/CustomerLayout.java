@@ -152,9 +152,14 @@ public class CustomerLayout {
         JLabel price_k=new JLabel("价格",JLabel.CENTER);
         JLabel price_v=new JLabel("",JLabel.CENTER);
         JLabel room_num=new JLabel("房间号",JLabel.CENTER);
+        JPanel panel2_2_1=new JPanel();
+        JComboBox comboBox=new JComboBox();
+        comboBox.setPreferredSize(new Dimension(200,30));
+        panel2_2_1.add(comboBox);
         panel2_2.add(price_k);
         panel2_2.add(price_v);
         panel2_2.add(room_num);
+        panel2_2.add(panel2_2_1);
         border=BorderFactory.createTitledBorder(etched,"客房信息");
         panel2.setBorder(border);
         panel2.setPreferredSize(new Dimension(0,50));

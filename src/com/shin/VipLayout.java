@@ -51,7 +51,7 @@ public class VipLayout {
     private Component getManaged(){
         JPanel panel_main=new JPanel(new BorderLayout());
         String[] tableTitle={"卡号","身份证号","姓名","性别","电话号码","删除"};
-        String[][] rowdata={{"13215616","325520322145253625","小名","123523625442","","X"}};
+        String[][] rowdata={{"","","","","","X"}};
         DefaultTableModel model=new DefaultTableModel(rowdata,tableTitle){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -63,6 +63,7 @@ public class VipLayout {
                 }
             }
         };
+        model.removeRow(0);
         JTable table=new JTable(model);
         table.getTableHeader().setReorderingAllowed(false); //设置列不可移动
         table.getColumnModel().getColumn(5).setMaxWidth(50);
