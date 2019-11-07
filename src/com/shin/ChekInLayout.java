@@ -16,11 +16,11 @@ import java.util.Vector;
 
 
 //客户界面
-public class CustomerLayout {
+public class ChekInLayout {
 
     private JTabbedPane tabbedPane;
 
-    public CustomerLayout(){
+    public ChekInLayout(){
         tabbedPane=new JTabbedPane();
     }
 

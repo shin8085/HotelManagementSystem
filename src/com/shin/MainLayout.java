@@ -15,12 +15,13 @@ public class MainLayout {
         tabbedPan=new JTabbedPane();
     }
     private void CreateWindow(){
-        CustomerLayout customerLayout=new CustomerLayout();
+        ChekInLayout chekInLayout=new ChekInLayout();
         VipLayout vipLayout=new VipLayout();
         ChangeRoomLayout changeRoomLayout=new ChangeRoomLayout();
-        tabbedPan.addTab("入住",customerLayout.getMainPanel());
+        CheckoutLayout checkoutLayout=new CheckoutLayout();
+        tabbedPan.addTab("入住",chekInLayout.getMainPanel());
         tabbedPan.addTab("换房",changeRoomLayout.getMainPanel());
-        tabbedPan.addTab("退房",new JPanel());
+        tabbedPan.addTab("退房",checkoutLayout.getMainPanel());
         tabbedPan.addTab("贵宾卡",vipLayout.getMainPanel());
         tabbedPan.addTab("房间信息",new JPanel());
         frame_main.setContentPane(tabbedPan);
