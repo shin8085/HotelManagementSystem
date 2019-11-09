@@ -8,7 +8,7 @@ public class Database {
     private String user="root";
     private  String passwd="168168";
 
-    public Database() throws Exception {
+    public Database(){
         //连接数据库
         try{
             Class.forName("com.mysql.jdbc.Driver");
