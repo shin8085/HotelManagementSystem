@@ -9,7 +9,7 @@ import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 
 public class CustomerLayout {
-    Database database=new Database();
+    private Database database=new Database();
     public Component getMainPanel(){
         JPanel panel_main=new JPanel(new BorderLayout());
         String[] tableTitle={"身份证号","姓名","性别","电话号码","房间号","入住时间","备注"};
@@ -33,7 +33,6 @@ public class CustomerLayout {
                 rowdata[row][6]=resultSet.getString("remark");
                 row++;
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
