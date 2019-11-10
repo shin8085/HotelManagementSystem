@@ -16,12 +16,12 @@ import java.util.List;
 
 
 //客户界面
-public class ChekInLayout {
+public class CheckInLayout {
 
     private JTabbedPane tabbedPane;
     private Database database;
 
-    public ChekInLayout(){
+    public CheckInLayout(){
         tabbedPane=new JTabbedPane();
         try{
             database=new Database();
@@ -392,6 +392,7 @@ public class ChekInLayout {
             panel_main.add(commit);
             panel_main.revalidate();
         }
+
     }
 
     private Component getGroup(){

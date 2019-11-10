@@ -15,12 +15,12 @@ public class MainLayout {
         tabbedPan=new JTabbedPane();
     }
     private void CreateWindow(){
-        ChekInLayout chekInLayout=new ChekInLayout();
+        CheckInLayout checkInLayout=new CheckInLayout();
         VipLayout vipLayout=new VipLayout();
         ChangeRoomLayout changeRoomLayout=new ChangeRoomLayout();
         CheckoutLayout checkoutLayout=new CheckoutLayout();
         CustomerLayout customerLayout=new CustomerLayout();
-        tabbedPan.addTab("入住",chekInLayout.getMainPanel());
+        tabbedPan.addTab("入住",checkInLayout.getMainPanel());
         tabbedPan.addTab("换房",changeRoomLayout.getMainPanel());
         tabbedPan.addTab("退房",checkoutLayout.getMainPanel());
         tabbedPan.addTab("贵宾卡",vipLayout.getMainPanel());
@@ -29,8 +29,13 @@ public class MainLayout {
         frame_main.setContentPane(tabbedPan);
         frame_main.setVisible(true);
     }
+
     public static void main(String[] args) {
         MainLayout main=new MainLayout();
         main.CreateWindow();
+    }
+
+    public void replaceCustomerLayout(){
+        System.out.println(tabbedPan.getTabCount());
     }
 }

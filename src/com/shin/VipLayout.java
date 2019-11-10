@@ -2,7 +2,6 @@ package com.shin;
 
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -10,11 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
 
 //贵宾卡界面
 public class VipLayout {
@@ -26,6 +23,7 @@ public class VipLayout {
     private JTextField field3=new JTextField(20);
     private JTextField field4=new JTextField(20);
     private JTextField field5=new JTextField(20);
+
 
     public VipLayout(){
         tabbedPane=new JTabbedPane();
@@ -68,7 +66,10 @@ public class VipLayout {
                 field3.setText("");
                 field4.setText("");
                 field5.setText("");
-                setId();
+                setId(); //初始化vip卡号
+                //更新显示界面
+                tabbedPane.remove(1);
+                tabbedPane.addTab("已办理用户",getManaged());
             }
         });
         panel_main.add(panel1);
@@ -79,28 +80,48 @@ public class VipLayout {
     //已办理vip
     private Component getManaged(){
         JPanel panel_main=new JPanel(new BorderLayout());
-        String[] tableTitle={"卡号","身份证号","姓名","性别","电话号码","删除"};
-        String[][] rowdata={{"","","","","","X"}};
+        String[] tableTitle={"卡号","身份证号","姓名","性别","电话号码","办理时间","删除"};
+        //String[][] rowdata={{"","","","","","","X"}};
+        String[][] rowdata=new String[1][];
+        try {
+            ResultSet rowCount=database.QueryInfo("select count(*) from vip_card");
+            ResultSet resultSet=database.QueryInfo("select * from vip_card");
+            int row=0;
+            if(rowCount.next()){
+                String data[][]=new String[rowCount.getInt("count(*)")][];
+                rowdata=data;
+            }
+            while(resultSet.next()){
+                rowdata[row]=new String[7];
+                rowdata[row][0]=resultSet.getString("vid");
+                rowdata[row][1]=resultSet.getString("idnum");
+                rowdata[row][2]=resultSet.getString("cname");
+                rowdata[row][3]=resultSet.getString("sex");
+                rowdata[row][4]=resultSet.getString("telphone");
+                rowdata[row][5]=resultSet.getString("mtime");
+                rowdata[row][6]="X";
+                row++;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         DefaultTableModel model=new DefaultTableModel(rowdata,tableTitle){
             @Override
             public boolean isCellEditable(int row, int column) {
-                if(column==0||column==5){
-                    return false;
-                }
-                else{
-                    return true;
-                }
+                return false;
             }
         };
-        model.removeRow(0);
         JTable table=new JTable(model);
         table.getTableHeader().setReorderingAllowed(false); //设置列不可移动
-        table.getColumnModel().getColumn(5).setMaxWidth(50);
+        table.getColumnModel().getColumn(6).setMaxWidth(50);
         table.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                if(table.getSelectedColumn()==5){
+                if(table.getSelectedColumn()==6){
+                    String idcard=(String)table.getValueAt(table.getSelectedRow(),0);
                     model.removeRow(table.getSelectedRow());
+                    String sql="delete from vip_card where vid='"+idcard+"'";
+                    database.UpdataInfo(sql);
                 }
             }
 
@@ -130,7 +151,7 @@ public class VipLayout {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Color background;
                 Component renderer=super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if(column==5){
+                if(column==6){
                     background=Color.red;
                 }
                 else{
@@ -172,11 +193,11 @@ public class VipLayout {
     private void setId(){
         field1.setEditable(false);
         try{
-            ResultSet resultSet=database.QueryInfo("select count(*) from vip_card");
+            ResultSet resultSet=database.QueryInfo("select max(vid) from vip_card");
             if(resultSet.next()){
                 long n;
-                if(resultSet.getInt("count(*)")>0){
-                    n=2703000001L+resultSet.getInt("count(*)");
+                if(resultSet.getLong("max(vid)")>0){
+                    n=resultSet.getLong("max(vid)")+1;
                 }else{
                     n=2703000001L;
                 }
@@ -186,5 +207,4 @@ public class VipLayout {
             e.printStackTrace();
         }
     }
-
 }

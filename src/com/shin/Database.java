@@ -4,7 +4,7 @@ import java.sql.*;
 public class Database {
     private Connection conn;
     private Statement stat;
-    private String url="jdbc:mysql://127.0.0.1:3306/hms_database";
+    private String url="jdbc:mysql://127.0.0.1:3306/hms_database?useSSL=false&serverTimezone=UTC";
     private String user="root";
     private  String passwd="168168";
 
@@ -28,9 +28,8 @@ public class Database {
         }
         return rs;
     }
-    public void InsertOrUpdataInfo(String sql){
+    public void UpdataInfo(String sql){
         stat = null;
-        ResultSet rs = null;
         try {
             stat = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
             stat.executeUpdate(sql);
@@ -48,7 +47,7 @@ public class Database {
         }
         String sql="insert into "+target+" values('"+data+"')";
         try {
-            InsertOrUpdataInfo(sql);
+            UpdataInfo(sql);
         }catch (Exception e){
             e.printStackTrace();
         }
