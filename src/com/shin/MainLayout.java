@@ -20,11 +20,12 @@ public class MainLayout {
         ChangeRoomLayout changeRoomLayout=new ChangeRoomLayout();
         CheckoutLayout checkoutLayout=new CheckoutLayout();
         CustomerLayout customerLayout=new CustomerLayout();
+        RoomInfoLayout roomInfoLayout=new RoomInfoLayout();
         tabbedPan.addTab("入住",checkInLayout.getMainPanel());
         tabbedPan.addTab("换房",changeRoomLayout.getMainPanel());
         tabbedPan.addTab("退房",checkoutLayout.getMainPanel());
         tabbedPan.addTab("贵宾卡",vipLayout.getMainPanel());
-        tabbedPan.addTab("房间信息",new JPanel());
+        tabbedPan.addTab("房间信息",roomInfoLayout.getMainPanel());
         tabbedPan.addTab("顾客信息",customerLayout.getMainPanel());
         frame_main.setContentPane(tabbedPan);
         frame_main.setVisible(true);
