@@ -16,12 +16,12 @@ import java.util.List;
 
 
 //客户界面
-public class CheckInLayout {
+public class CheckInOrBookLayout {
 
     private JTabbedPane tabbedPane;
     private Database database;
 
-    public CheckInLayout(){
+    public CheckInOrBookLayout(){
         tabbedPane=new JTabbedPane();
         try{
             database=new Database();
@@ -43,6 +43,7 @@ public class CheckInLayout {
         private JPanel panel1;
         private JPanel panel2;
         private JPanel panel3;
+        private JPanel panel4;
         private Border etched=BorderFactory.createEtchedBorder();
         private Border border;
         private JTable table;
@@ -54,6 +55,8 @@ public class CheckInLayout {
         private JLabel idcard_k;
         private JLabel idcard_v;
         private JTextField TvipCard; //卡号输入框
+        private JRadioButton rb_book; //预定
+        private JRadioButton rb_check_in; //直接入住
         private JButton commit; //页面提交按钮
         Person(){
             panel_main=new JPanel();
@@ -61,10 +64,12 @@ public class CheckInLayout {
             initInfoTable();
             initRoomChoice();
             initVipInfo();
+            bookOrNow();
             commit();
             panel_main.add(panel1);
             panel_main.add(panel2);
             panel_main.add(panel3);
+            panel_main.add(panel4);
             panel_main.add(commit);
         }
         public Component getPanelMain(){
@@ -309,6 +314,19 @@ public class CheckInLayout {
                 }
             });
         }
+        private void bookOrNow(){
+            panel4=new JPanel();
+            rb_book=new JRadioButton("预定");
+            rb_check_in=new JRadioButton("入住");
+            panel4.add(rb_check_in);
+            panel4.add(rb_book);
+            rb_check_in.setSelected(true);
+            ButtonGroup group=new ButtonGroup();
+            group.add(rb_book);
+            group.add(rb_check_in);
+            border=BorderFactory.createTitledBorder(etched,"预定/入住");
+            panel4.setBorder(border);
+        }
         private void commit(){
             commit=new JButton("提交");
             commit.addActionListener(new ActionListener() {
@@ -366,14 +384,26 @@ public class CheckInLayout {
                         }
                     }
                     String date=dateFormat.format(new Date());
-                    for(int i=0;i<rowCount;i++){
-                        if(i==0){
-                            database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],remark});
-                        }else{
-                            database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],"无"});
+                    if(rb_check_in.isSelected()){
+                        for(int i=0;i<rowCount;i++){
+                            if(i==0){
+                                database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],remark});
+                            }else{
+                                database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],"无"});
+                            }
+                            database.Insert("check_in",new String[]{data[i][0],roomNum,date});
                         }
-                        database.Insert("check_in",new String[]{data[i][0],roomNum,date});
+                    }else{
+                        for(int i=0;i<rowCount;i++){
+                            if(i==0){
+                                database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],"预定"});
+                            }else{
+                                database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],"预定"});
+                            }
+                            database.Insert("book",new String[]{data[i][0],roomNum,date});
+                        }
                     }
+
                     javax.swing.JOptionPane.showMessageDialog(null,"提交成功!");
                     reset();
                 }
