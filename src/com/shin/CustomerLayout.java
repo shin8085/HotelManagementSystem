@@ -15,8 +15,8 @@ public class CustomerLayout {
         String[] tableTitle={"身份证号","姓名","性别","电话号码","房间号","入住时间","备注"};
         String[][] rowdata=new String[1][];
         try {
-            ResultSet rowCount=database.QueryInfo("select count(*) from customer");
-            ResultSet resultSet=database.QueryInfo("select * from customer,check_in where customer.idnum=check_in.idnum");
+            ResultSet rowCount=database.QueryInfo("select count(*) from customer where customer.idnum not in (select idnum from book)");
+            ResultSet resultSet=database.QueryInfo("select * from customer,check_in where customer.idnum=check_in.idnum and customer.idnum not in (select idnum from book)");
             int row=0;
             if(rowCount.next()){
                 String data[][]=new String[rowCount.getInt("count(*)")][];

@@ -33,7 +33,7 @@ public class ChangeRoomLayout {
                         if(resultSet.next()){
                             String rid=resultSet.getString("rid");
                             field2.setText(rid);
-                            ResultSet resultSet1=database.QueryInfo("select rid from room where rid not in (select rid from check_in) and rtype=(select rtype from room where rid='"+rid+"')");
+                            ResultSet resultSet1=database.QueryInfo("select rid from room where rid not in (select rid from check_in) and rtype=(select rtype from room where rid='"+rid+"') and rid not in (select rid from book)");
                             comboBox.removeAllItems();
                             while(resultSet1.next()){
                                 comboBox.addItem(resultSet1.getString("rid"));

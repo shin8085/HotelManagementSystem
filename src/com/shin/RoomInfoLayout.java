@@ -16,9 +16,13 @@ public class RoomInfoLayout {
             ResultSet resultSet=database.QueryInfo("select rid,rtype from room");
             while(resultSet.next()){
                 JButton button=new JButton("<html>"+resultSet.getString("rid")+"<br>"+resultSet.getString("rtype")+"</html>");
-                ResultSet resultSet1=database.QueryInfo("select * from check_in where rid="+resultSet.getString("rid"));
-                if(resultSet1.next()){
+                ResultSet checkIn=database.QueryInfo("select * from check_in where rid="+resultSet.getString("rid"));
+                ResultSet book=database.QueryInfo("select * from book where rid="+resultSet.getString("rid"));
+                if(checkIn.next()){
                     button.setBackground(Color.red);
+                }
+                else if(book.next()){
+                    button.setBackground(Color.yellow);
                 }
                 else{
                     button.setBackground(Color.green);

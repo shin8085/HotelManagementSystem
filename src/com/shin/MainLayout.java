@@ -1,5 +1,7 @@
 package com.shin;
 
+import com.sun.source.tree.LambdaExpressionTree;
+
 import javax.swing.*;
 
 
@@ -21,10 +23,12 @@ public class MainLayout {
         CheckoutLayout checkoutLayout=new CheckoutLayout();
         CustomerLayout customerLayout=new CustomerLayout();
         RoomInfoLayout roomInfoLayout=new RoomInfoLayout();
+        BookInfoLayout bookInfoLayout=new BookInfoLayout();
         tabbedPan.addTab("入住/预定",checkInOrBookLayout.getMainPanel());
         tabbedPan.addTab("换房",changeRoomLayout.getMainPanel());
         tabbedPan.addTab("退房",checkoutLayout.getMainPanel());
         tabbedPan.addTab("贵宾卡",vipLayout.getMainPanel());
+        tabbedPan.addTab("预定信息",bookInfoLayout.getPanelMain());
         tabbedPan.addTab("房间信息",roomInfoLayout.getMainPanel());
         tabbedPan.addTab("顾客信息",customerLayout.getMainPanel());
         frame_main.setContentPane(tabbedPan);
@@ -36,7 +40,4 @@ public class MainLayout {
         main.CreateWindow();
     }
 
-    public void replaceCustomerLayout(){
-        System.out.println(tabbedPan.getTabCount());
-    }
 }
