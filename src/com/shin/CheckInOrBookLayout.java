@@ -2,17 +2,13 @@ package com.shin;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 
 
 //客户界面
@@ -429,18 +425,44 @@ public class CheckInOrBookLayout {
         private JPanel panel_main;
         private JPanel panel1;
         private JPanel panel2;
-        JButton commit;
+        private JPanel panel3;
+        JTable table;
+        private Database database=new Database();
+        JButton checkIn;
+        JButton book;
         Border etched=BorderFactory.createEtchedBorder();
         Border border;
+        private JCheckBox checkBox_201;
+        private JCheckBox checkBox_202;
+        private JCheckBox checkBox_203;
+        private JCheckBox checkBox_204;
+        private JCheckBox checkBox_301;
+        private JCheckBox checkBox_302;
+        private JCheckBox checkBox_303;
+        private JCheckBox checkBox_304;
+        private JCheckBox checkBox_401;
+        private JCheckBox checkBox_402;
+        private JCheckBox checkBox_403;
+        private JCheckBox checkBox_404;
+        private String [] roomId=new String[]{"201","202","203","204","301","302","303","304","401","402","403","404"};
+        JLabel group_id;
+        private Map<String,JCheckBox> map=new HashMap<String,JCheckBox>(){};
         Group(){
             panel_main=new JPanel();
             panel_main.setLayout(new BoxLayout(panel_main,BoxLayout.Y_AXIS));
             initInfoTable();
+            initGroupId();
             initRoomChoose();
-            commit=new JButton("提交");
+            commit();
+            book();
             panel_main.add(panel1);
             panel_main.add(panel2);
-            panel_main.add(commit);
+            panel_main.add(panel3);
+            JPanel checkInAndBook=new JPanel();
+            checkInAndBook.setMaximumSize(new Dimension(2000,50));
+            checkInAndBook.add(checkIn);
+            checkInAndBook.add(book);
+            panel_main.add(checkInAndBook);
         }
         public Component getPanelMain(){
             return panel_main;
@@ -460,7 +482,7 @@ public class CheckInOrBookLayout {
                     }
                 }
             };
-            JTable table=new JTable(model);
+            table=new JTable(model);
             table.getTableHeader().setReorderingAllowed(false); //设置列不可移动
             table.getColumnModel().getColumn(5).setMaxWidth(50);
             table.addMouseListener(new MouseListener() {
@@ -516,7 +538,6 @@ public class CheckInOrBookLayout {
                     super.setHorizontalAlignment(JLabel.CENTER);
                 }
             };
-            //cellRenderer.setHorizontalAlignment(JLabel.CENTER);
             table.setDefaultRenderer(Object.class,cellRenderer);
             //滚动列表
             JScrollPane jscrollpane = new JScrollPane(table);
@@ -547,56 +568,86 @@ public class CheckInOrBookLayout {
             border=BorderFactory.createTitledBorder(etched,"顾客信息");
             panel1.setBorder(border);
         }
+        private void initGroupId(){
+            panel2=new JPanel();
+            JLabel label=new JLabel("团队编号:");
+            group_id=new JLabel();
+            try {
+                ResultSet resultSet=database.QueryInfo("select count(*) from _group");
+                if(resultSet.next()){
+                    int groupNum=resultSet.getInt("count(*)");
+                    if(groupNum==0){
+                        group_id.setText("1");
+                    }
+                    else{
+                        group_id.setText(Integer.toString(groupNum+1));
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            panel2.add(label);
+            panel2.add(group_id);
+            panel2.setMaximumSize(new Dimension(2000,80));
+            border=BorderFactory.createTitledBorder(etched,"团队编号");
+            panel2.setBorder(border);
+        }
         private void initRoomChoose(){
             //客房选择
-            panel2=new JPanel();
-            panel2.setLayout(new BoxLayout(panel2,BoxLayout.Y_AXIS));
-            JPanel panel2_1=new JPanel(new GridLayout(0,3,0,0));
+            panel3 =new JPanel();
+            panel3.setLayout(new BoxLayout(panel3,BoxLayout.Y_AXIS));
+            JPanel panel2_1=new JPanel(new GridLayout(0,2,0,0));
             JLabel head1=new JLabel("类型",JLabel.CENTER);
-            JLabel head2=new JLabel("数量",JLabel.CENTER);
-            JLabel head3=new JLabel("房号",JLabel.CENTER);
+            JLabel head2=new JLabel("房号",JLabel.CENTER);
             JLabel label1=new JLabel("单人间（80/天）",JLabel.CENTER);
+            mapPut(map, roomId);
+            try{
+                ResultSet room_id=database.QueryInfo("select rid from room where rid in (select rid from check_in) union (select rid from book)");
+                while(room_id.next()){
+                    map.get(room_id.getString("rid")).setEnabled(false);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             JPanel panel2_1_1=new JPanel();
-            JPanel panel2_1_2=new JPanel();
-            JTextField num1=new JTextField(10);
-            JTextField set1=new JTextField(30);
-            panel2_1_1.add(num1);
-            panel2_1_2.add(set1);
+            addComponent(panel2_1_1,new JComponent[]{map.get("201"),map.get("202"),map.get("203"),map.get("204")});
             JLabel label2=new JLabel("双人间（120/天）",JLabel.CENTER);
-            JPanel panel2_1_3=new JPanel();
-            JPanel panel2_1_4=new JPanel();
-            JTextField num2=new JTextField(10);
-            JTextField set2=new JTextField(30);
-            panel2_1_3.add(num2);
-            panel2_1_4.add(set2);
+            JPanel panel2_1_2=new JPanel();
+            addComponent(panel2_1_2,new JComponent[]{map.get("301"),map.get("302"),map.get("303"),map.get("304")});
             JLabel label3=new JLabel("豪华套间（200/天）",JLabel.CENTER);
-            JPanel panel2_1_5=new JPanel();
-            JPanel panel2_1_6=new JPanel();
-            JTextField num3=new JTextField(10);
-            JTextField set3=new JTextField(30);
-            panel2_1_5.add(num3);
-            panel2_1_6.add(set3);
-            panel2_1.add(head1);
-            panel2_1.add(head2);
-            panel2_1.add(head3);
-            panel2_1.add(label1);
-            panel2_1.add(panel2_1_1);
-            panel2_1.add(panel2_1_2);
-            panel2_1.add(label2);
-            panel2_1.add(panel2_1_3);
-            panel2_1.add(panel2_1_4);
-            panel2_1.add(label3);
-            panel2_1.add(panel2_1_5);
-            panel2_1.add(panel2_1_6);
-
-            panel2.add(panel2_1);
+            JPanel panel2_1_3=new JPanel();
+            addComponent(panel2_1_3,new JComponent[]{map.get("401"),map.get("402"),map.get("403"),map.get("404")});
+            addComponent(panel2_1,new JComponent[]{head1,head2,label1,panel2_1_1,label2,panel2_1_2,label3,panel2_1_3});
+            panel3.add(panel2_1);
             border=BorderFactory.createTitledBorder(etched,"客房信息");
-            panel2.setBorder(border);
-            panel2.setPreferredSize(new Dimension(0,50));
+            panel3.setBorder(border);
+            panel3.setPreferredSize(new Dimension(0,50));
 
         }
         private void commit(){
-
+            checkIn =new JButton("提交");
+            checkIn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    int rowCount=table.getRowCount();
+                    database.Insert("_group",new String[]{group_id.getText(),(String)table.getValueAt(0,1),Integer.toString(rowCount)});
+                    database.Insert("customer",new String[]{(String)table.getValueAt(0,1),(String)table.getValueAt(0,2),(String)table.getValueAt(0,3),(String)table.getValueAt(0,4),"领队"});
+                    SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String date=dateFormat.format(new Date());
+                    for(int i=0;i<roomId.length;i++){
+                        if(map.get(roomId[i]).isSelected()){
+                            database.Insert("check_in",new String[]{(String)table.getValueAt(0,1),roomId[i],date});
+                        }
+                    }
+                    for(int i=1;i<rowCount;i++){
+                        database.Insert("customer",new String[]{(String)table.getValueAt(i,1),(String)table.getValueAt(i,2),(String)table.getValueAt(i,3),(String)table.getValueAt(i,4),"团员"});
+                        database.Insert("follow",new String[]{group_id.getText(),(String)table.getValueAt(i,1)});
+                    }
+                }
+            });
+        }
+        private void book(){
+            book=new JButton("预约");
         }
 
     }
@@ -605,6 +656,11 @@ public class CheckInOrBookLayout {
     private void addComponent(JPanel panel,JComponent [] components){
         for(int i=0;i<components.length;i++){
             panel.add(components[i]);
+        }
+    }
+    private void mapPut(Map<String ,JCheckBox> map,String [] s){
+        for(int i=0;i<s.length;i++){
+            map.put(s[i],new JCheckBox(s[i]));
         }
     }
 
