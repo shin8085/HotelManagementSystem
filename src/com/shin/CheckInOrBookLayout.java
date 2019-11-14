@@ -648,6 +648,25 @@ public class CheckInOrBookLayout {
         }
         private void book(){
             book=new JButton("预约");
+            book.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    int rowCount=table.getRowCount();
+                    database.Insert("_group",new String[]{group_id.getText(),(String)table.getValueAt(0,1),Integer.toString(rowCount)});
+                    database.Insert("customer",new String[]{(String)table.getValueAt(0,1),(String)table.getValueAt(0,2),(String)table.getValueAt(0,3),(String)table.getValueAt(0,4),"领队"});
+                    SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String date=dateFormat.format(new Date());
+                    for(int i=0;i<roomId.length;i++){
+                        if(map.get(roomId[i]).isSelected()){
+                            database.Insert("book",new String[]{(String)table.getValueAt(0,1),roomId[i],date});
+                        }
+                    }
+                    for(int i=1;i<rowCount;i++){
+                        database.Insert("customer",new String[]{(String)table.getValueAt(i,1),(String)table.getValueAt(i,2),(String)table.getValueAt(i,3),(String)table.getValueAt(i,4),"团员"});
+                        database.Insert("follow",new String[]{group_id.getText(),(String)table.getValueAt(i,1)});
+                    }
+                }
+            });
         }
 
     }
