@@ -12,25 +12,56 @@ public class CustomerLayout {
     private Database database=new Database();
     public Component getMainPanel(){
         JPanel panel_main=new JPanel(new BorderLayout());
-        String[] tableTitle={"身份证号","姓名","性别","电话号码","房间号","入住时间","备注"};
+        String[] tableTitle={"身份证号","姓名","性别","电话号码","房间号","入住时间","队伍编号","备注"};
         String[][] rowdata=new String[1][];
         try {
-            ResultSet rowCount=database.QueryInfo("select count(*) from customer where customer.idnum not in (select idnum from book)");
-            ResultSet resultSet=database.QueryInfo("select * from customer,check_in where customer.idnum=check_in.idnum and customer.idnum not in (select idnum from book)");
+            ResultSet rowCount1=database.QueryInfo("select count(*) from check_in group by idnum");
+            ResultSet rowCount2=database.QueryInfo("select count(*) from follow where gid in (select gid from _group where cap_idnum in (select idnum from check_in))");
+            ResultSet resultSet=database.QueryInfo("select * from customer where customer.idnum not in (select idnum from book) and idnum not in (select men_idnum from follow where gid in(select gid from _group where cap_idnum not in (select idnum from check_in)))");
             int row=0;
-            if(rowCount.next()){
-                String data[][]=new String[rowCount.getInt("count(*)")][];
+            if(rowCount1.next()){
+                String data[][]=new String[rowCount1.getInt("count(*)")][];
                 rowdata=data;
+                if(rowCount2.next()){
+                    String data2[][]=new String[rowCount1.getInt("count(*)")+rowCount2.getInt("count(*)")][];
+                    rowdata=data2;
+                }
             }
             while(resultSet.next()){
-                rowdata[row]=new String[7];
+                String rid="";
+                String citime="";
+                String groupId="无";
+                ResultSet ridAndCitime;
+                if(resultSet.getString("remark").equals("团员")){
+                    ResultSet rgid=database.QueryInfo("select gid from follow where men_idnum="+resultSet.getString("idnum"));
+                    if(rgid.next()){
+                        groupId=rgid.getString("gid");
+                    }
+                    ridAndCitime=database.QueryInfo("select rid,citime from check_in where idnum=(select cap_idnum from _group where gid=(select gid from follow where men_idnum="+resultSet.getString("idnum")+"))");
+                }else{
+                    ResultSet rgid=database.QueryInfo("select gid from _group where cap_idnum="+resultSet.getString("idnum"));
+                    if(rgid.next()){
+                        groupId=rgid.getString("gid");
+                    }
+                    ridAndCitime=database.QueryInfo("select rid,citime from check_in where idnum="+resultSet.getString("idnum"));
+                }
+                while(ridAndCitime.next()){
+                    rid+=ridAndCitime.getString("rid");
+                    if(!ridAndCitime.isLast()){
+                        rid+=",";
+                    }else{
+                        citime=ridAndCitime.getString("citime");
+                    }
+                }
+                rowdata[row]=new String[8];
                 rowdata[row][0]=resultSet.getString("idnum");
                 rowdata[row][1]=resultSet.getString("cname");
                 rowdata[row][2]=resultSet.getString("sex");
                 rowdata[row][3]=resultSet.getString("telphone");
-                rowdata[row][4]=resultSet.getString("rid");
-                rowdata[row][5]=resultSet.getString("citime");
-                rowdata[row][6]=resultSet.getString("remark");
+                rowdata[row][4]=rid;
+                rowdata[row][5]=citime;
+                rowdata[row][6]=groupId;
+                rowdata[row][7]=resultSet.getString("remark");
                 row++;
             }
         }catch (Exception e){
