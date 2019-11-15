@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.ResultSet;
@@ -64,9 +65,9 @@ public class BookInfoLayout {
         table.getTableHeader().setReorderingAllowed(false); //设置列不可移动
         table.getColumnModel().getColumn(7).setMaxWidth(50);
         table.getColumnModel().getColumn(8).setMaxWidth(50);
-        table.addMouseListener(new MouseListener() {
+        table.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
+            public void mouseClicked(MouseEvent e) {
                 String idnum=(String)table.getValueAt(table.getSelectedRow(),0);
                 String rid=(String)table.getValueAt(table.getSelectedRow(),4);
                 SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -75,7 +76,10 @@ public class BookInfoLayout {
                     //入住
                     model.removeRow(table.getSelectedRow());
                     database.UpdataInfo("delete from book where idnum="+idnum);
-                    database.Insert("check_in",new String[]{idnum,rid,date});
+                    String [] rids=rid.split(",");
+                    for (String r : rids) {
+                        database.Insert("check_in", new String[]{idnum, r, date});
+                    }
                 }
                 else if(table.getSelectedColumn()==8){
                     //取消预约
@@ -83,26 +87,6 @@ public class BookInfoLayout {
                     database.UpdataInfo("delete from book where idnum="+idnum);
                     database.UpdataInfo("delete from customer where idnum="+idnum);
                 }
-            }
-
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent mouseEvent) {
-
             }
         });
 
