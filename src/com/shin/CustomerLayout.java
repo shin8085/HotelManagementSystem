@@ -15,15 +15,15 @@ public class CustomerLayout {
         String[] tableTitle={"身份证号","姓名","性别","电话号码","房间号","入住时间","队伍编号","备注"};
         String[][] rowdata=new String[1][];
         try {
-            ResultSet rowCount1=database.QueryInfo("select count(*) from check_in group by idnum");
+            ResultSet rowCount1=database.QueryInfo("select count(distinct idnum) from check_in");
             ResultSet rowCount2=database.QueryInfo("select count(*) from follow where gid in (select gid from _group where cap_idnum in (select idnum from check_in))");
             ResultSet resultSet=database.QueryInfo("select * from customer where customer.idnum not in (select idnum from book) and idnum not in (select men_idnum from follow where gid in(select gid from _group where cap_idnum not in (select idnum from check_in)))");
             int row=0;
             if(rowCount1.next()){
-                String data[][]=new String[rowCount1.getInt("count(*)")][];
+                String data[][]=new String[rowCount1.getInt("count(distinct idnum)")][];
                 rowdata=data;
                 if(rowCount2.next()){
-                    String data2[][]=new String[rowCount1.getInt("count(*)")+rowCount2.getInt("count(*)")][];
+                    String data2[][]=new String[rowCount1.getInt("count(distinct idnum)")+rowCount2.getInt("count(*)")][];
                     rowdata=data2;
                 }
             }

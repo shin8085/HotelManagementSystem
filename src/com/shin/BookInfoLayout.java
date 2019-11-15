@@ -21,11 +21,11 @@ public class BookInfoLayout {
         //String[][] rowdata={{"","","","","","","","√","X"}};
         String[][] rowdata=new String[1][];
         try {
-            ResultSet rowCount=database.QueryInfo("select count(*) from book");
+            ResultSet rowCount=database.QueryInfo("select count(distinct idnum) as count from book");
             ResultSet resultSet=database.QueryInfo("select * from customer where idnum in (select idnum from book)");
             int row=0;
             if(rowCount.next()){
-                String data[][]=new String[rowCount.getInt("count(*)")][];
+                String data[][]=new String[rowCount.getInt("count")][];
                 rowdata=data;
             }
             while(resultSet.next()){
@@ -35,10 +35,17 @@ public class BookInfoLayout {
                 rowdata[row][1]=resultSet.getString("cname");
                 rowdata[row][2]=resultSet.getString("sex");
                 rowdata[row][3]=resultSet.getString("telphone");
-                if(bookinfo.next()){
-                    rowdata[row][4]=bookinfo.getString("rid");
-                    rowdata[row][5]=bookinfo.getString("btime");
+                String rid="";
+                while(bookinfo.next()){
+                    rid+=bookinfo.getString("rid");
+                    if(!bookinfo.isLast()){
+                        rid+=",";
+                    }else{
+                        rowdata[row][5]=bookinfo.getString("btime");
+                    }
+
                 }
+                rowdata[row][4]=rid;
                 rowdata[row][6]=resultSet.getString("remark");
                 rowdata[row][7]="√";
                 rowdata[row][8]="X";
