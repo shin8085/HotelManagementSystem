@@ -83,9 +83,29 @@ public class BookInfoLayout {
                 }
                 else if(table.getSelectedColumn()==8){
                     //取消预约
+                    //散客 customer book
+                    //团队 customer _group follow book
+                    if(!table.getValueAt(table.getSelectedRow(),6).equals("领队")){
+                        //散客
+                        database.UpdataInfo("delete from book where idnum="+idnum);
+                        database.UpdataInfo("delete from customer where idnum="+idnum);
+                    }else{
+                        //团队
+                        database.UpdataInfo("delete from book where idnum="+idnum);
+                        database.UpdataInfo("delete from customer where idnum="+idnum);
+                        ResultSet men_idnums=database.QueryInfo("select men_idnum from follow where gid=(select gid from _group where cap_idnum="+idnum+")");
+                        database.UpdataInfo("delete from follow where gid=(select gid from _group where cap_idnum="+idnum+")");
+                        try{
+                            while(men_idnums.next()){
+                                System.out.println(men_idnums.getString("men_idnum"));
+                                database.UpdataInfo("delete from customer where idnum="+men_idnums.getString("men_idnum"));
+                            }
+                        }catch (Exception e1){
+                            e1.printStackTrace();
+                        }
+                        database.UpdataInfo("delete from _group where cap_idnum="+idnum);
+                    }
                     model.removeRow(table.getSelectedRow());
-                    database.UpdataInfo("delete from book where idnum="+idnum);
-                    database.UpdataInfo("delete from customer where idnum="+idnum);
                 }
             }
         });
