@@ -51,6 +51,7 @@ public class CheckInOrBookLayout {
         private JComboBox comboBox; //房间号下拉框
         private JLabel idcard_k;
         private JLabel idcard_v;
+        private JLabel idcard_y;
         private JTextField TvipCard; //卡号输入框
         private JRadioButton rb_book; //预定
         private JRadioButton rb_check_in; //直接入住
@@ -209,6 +210,8 @@ public class CheckInOrBookLayout {
             panel2_1.add(rb3);
             JLabel price_k=new JLabel("价格",JLabel.CENTER);
             JLabel price_v=new JLabel("",JLabel.CENTER);
+            JLabel deposit_k=new JLabel("押金",JLabel.CENTER);
+            JLabel deposit_v=new JLabel("",JLabel.CENTER);
             JLabel room_num=new JLabel("房间号",JLabel.CENTER);
             JPanel panel2_2_1=new JPanel();
             comboBox=new JComboBox();
@@ -224,11 +227,13 @@ public class CheckInOrBookLayout {
             panel2_2_1.add(comboBox);
             panel2_2.add(price_k);
             panel2_2.add(price_v);
+            panel2_2.add(deposit_k);
+            panel2_2.add(deposit_v);
             panel2_2.add(room_num);
             panel2_2.add(panel2_2_1);
             border=BorderFactory.createTitledBorder(etched,"客房信息");
             panel2.setBorder(border);
-            panel2.setPreferredSize(new Dimension(0,50));
+            panel2.setPreferredSize(new Dimension(0,100));
             panel2.add(panel2_1);
             panel2.add(panel2_2);
             ButtonGroup group=new ButtonGroup();
@@ -237,6 +242,7 @@ public class CheckInOrBookLayout {
             group.add(rb3);
             rb1.setSelected(true);
             price_v.setText("100");
+            deposit_v.setText("50");
             ActionListener listener1=new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
@@ -244,14 +250,17 @@ public class CheckInOrBookLayout {
                     String type="";
                     if(rb==rb1){
                         price_v.setText("100");
+                        deposit_v.setText("50");
                         type ="单人间";
                     }
                     else if(rb==rb2){
                         price_v.setText("140");
+                        deposit_v.setText("70");
                         type="双人间";
                     }
                     else if(rb==rb3){
                         price_v.setText("220");
+                        deposit_v.setText("110");
                         type="豪华套间";
                     }
                     Vector<String> results=new Vector<>();
@@ -329,16 +338,19 @@ public class CheckInOrBookLayout {
             commit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
-                    String roomType,price,roomNum;
+                    String roomType,price,roomNum,deposit=null;
                     if(rb1.isSelected()){
                         roomType="单人房";
                         price="100";
+                        deposit="50";
                     }else if(rb2.isSelected()){
                         roomType="双人房";
                         price="140";
+                        deposit="70";
                     }else if(rb3.isSelected()){
                         roomType="豪华套间";
                         price="220";
+                        deposit="110";
                     }
                     roomNum=(String)comboBox.getSelectedItem();
                     int rowCount=table.getRowCount();
@@ -382,34 +394,32 @@ public class CheckInOrBookLayout {
                     String date=dateFormat.format(new Date());
                     if(rb_check_in.isSelected()){
                         //直接入住
-                        for(int i=0;i<rowCount;i++){
-                            if(i==0){
-                                database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],remark});
-                            }else{
-                                database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],"无"});
+                        for(int i=0;i<rowCount;i++) {
+                            if (i == 0) {
+                                database.Insert("customer", new String[]{data[i][0], data[i][1], data[i][2], data[i][3], remark});
+                                database.Insert("deposit", new String[]{data[i][0], deposit});
+                            } else {
+                                database.Insert("customer", new String[]{data[i][0], data[i][1], data[i][2], data[i][3], "无"});
                             }
-                            database.Insert("check_in",new String[]{data[i][0],roomNum,date});
+                            database.Insert("check_in", new String[]{data[i][0], roomNum, date});
                         }
-                        //重置顾客信息页面
-                        new Tools().resetTabLayout(MainLayout.tabbedPane,new CheckInOrBookLayout().getMainPanel(),0);
-                        new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);
-                        new Tools().resetTabLayout(tabbedPane,new Person().getMainPanel(),0);
+                        new Tools().resetTabLayout(MainLayout.tabbedPane,new CustomerLayout().getMainPanel(),6);
                     }else{
                         //预定
                         for(int i=0;i<rowCount;i++){
                             if(i==0){
                                 database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],remark});
+                                database.Insert("deposit",new String[]{data[i][0],deposit});
                             }else{
                                 database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],"无"});
                             }
                             database.Insert("book",new String[]{data[i][0],roomNum,date});
                         }
-                        //重置预定信息页面
-                        new Tools().resetTabLayout(MainLayout.tabbedPane,new CheckInOrBookLayout().getMainPanel(),0);
-                        new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);
-                        new Tools().resetTabLayout(tabbedPane,new Person().getMainPanel(),0);
+                        new Tools().resetTabLayout(MainLayout.tabbedPane,new BookInfoLayout().getMainPanel(),4);
                     }
                     javax.swing.JOptionPane.showMessageDialog(null,"提交成功!");
+                    new Tools().resetTabLayout(tabbedPane,new Person().getMainPanel(),0);
+                    new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);
                 }
             });
         }
@@ -420,6 +430,7 @@ public class CheckInOrBookLayout {
         private JPanel panel1;
         private JPanel panel2;
         private JPanel panel3;
+        private JPanel panel4;
         JTable table;
         private Database database=new Database();
         JButton checkIn;
@@ -440,6 +451,10 @@ public class CheckInOrBookLayout {
         private JCheckBox checkBox_404;
         private String [] roomId=new String[]{"201","202","203","204","301","302","303","304","401","402","403","404"};
         JLabel group_id;
+        private JLabel deposit_k;
+        private JLabel deposit_v;
+        private JLabel count_k;
+        private JLabel count_v;
         private Map<String,JCheckBox> map=new HashMap<String,JCheckBox>(){};
         Group(){
             panel_main=new JPanel();
@@ -447,11 +462,13 @@ public class CheckInOrBookLayout {
             initInfoTable();
             initGroupId();
             initRoomChoose();
+            initDeposit();
             commit();
             book();
             panel_main.add(panel1);
             panel_main.add(panel2);
             panel_main.add(panel3);
+            panel_main.add(panel4);
             JPanel checkInAndBook=new JPanel();
             checkInAndBook.setMaximumSize(new Dimension(2000,50));
             checkInAndBook.add(checkIn);
@@ -616,7 +633,45 @@ public class CheckInOrBookLayout {
             border=BorderFactory.createTitledBorder(etched,"客房信息");
             panel3.setBorder(border);
             panel3.setPreferredSize(new Dimension(0,50));
-
+            for(int i=0;i<roomId.length;i++){
+                JCheckBox checkBox=map.get(roomId[i]);
+                checkBox.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        int price1=Integer.parseInt(deposit_v.getText());
+                        int rid=Integer.parseInt(checkBox.getText());
+                        int tmp=0;
+                        if(rid<300){
+                            tmp=40;
+                        }else if(rid<400){
+                            tmp=60;
+                        }else if(rid<500){
+                            tmp=100;
+                        }
+                        if(checkBox.isSelected()){
+                            price1+=tmp;
+                        }else{
+                            price1-=tmp;
+                        }
+                        count_v.setText(Integer.toString(2*price1));
+                        deposit_v.setText(Integer.toString(price1));
+                    }
+                });
+            }
+        }
+        private void initDeposit(){
+            panel4=new JPanel();
+            count_k=new JLabel("总额：");
+            count_v=new JLabel("0");
+            deposit_k=new JLabel("押金：");
+            deposit_v=new JLabel("0");
+            panel4.add(count_k);
+            panel4.add(count_v);
+            panel4.add(deposit_k);
+            panel4.add(deposit_v);
+            panel4.setMaximumSize(new Dimension(2000,50));
+            border=BorderFactory.createTitledBorder(etched,"押金详情");
+            panel4.setBorder(border);
         }
         private void commit(){
             checkIn =new JButton("提交");
@@ -626,11 +681,12 @@ public class CheckInOrBookLayout {
                     int rowCount=table.getRowCount();
                     database.Insert("_group",new String[]{group_id.getText(),(String)table.getValueAt(0,1),Integer.toString(rowCount)});
                     database.Insert("customer",new String[]{(String)table.getValueAt(0,1),(String)table.getValueAt(0,2),(String)table.getValueAt(0,3),(String)table.getValueAt(0,4),"领队"});
+                    database.Insert("deposit",new String[]{(String)table.getValueAt(0,1),deposit_v.getText()});
                     SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String date=dateFormat.format(new Date());
                     for(int i=0;i<roomId.length;i++){
                         if(map.get(roomId[i]).isSelected()){
-                            database.Insert("check_in",new String[]{(String)table.getValueAt(0,1),roomId[i],date});
+                            database.Insert("check_in",new String[]{(String)table.getValueAt(0,1),roomId[i],date});;
                         }
                     }
                     for(int i=1;i<rowCount;i++){
@@ -638,9 +694,10 @@ public class CheckInOrBookLayout {
                         database.Insert("follow",new String[]{group_id.getText(),(String)table.getValueAt(i,1)});
                     }
                     javax.swing.JOptionPane.showMessageDialog(null,"提交成功!");
-                    new Tools().resetTabLayout(tabbedPane,new Group().getMainPanel(),1);
                     new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);
                     new Tools().resetTabLayout(MainLayout.tabbedPane,new CustomerLayout().getMainPanel(),6);
+                    MainLayout.tabbedPane.setSelectedIndex(0);
+                    new Tools().resetTabLayout(tabbedPane,new Group().getMainPanel(),1);
                 }
             });
         }
@@ -652,6 +709,7 @@ public class CheckInOrBookLayout {
                     int rowCount=table.getRowCount();
                     database.Insert("_group",new String[]{group_id.getText(),(String)table.getValueAt(0,1),Integer.toString(rowCount)});
                     database.Insert("customer",new String[]{(String)table.getValueAt(0,1),(String)table.getValueAt(0,2),(String)table.getValueAt(0,3),(String)table.getValueAt(0,4),"领队"});
+                    database.Insert("deposit",new String[]{(String)table.getValueAt(0,1),deposit_v.getText()});
                     SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String date=dateFormat.format(new Date());
                     for(int i=0;i<roomId.length;i++){
@@ -664,13 +722,13 @@ public class CheckInOrBookLayout {
                         database.Insert("follow",new String[]{group_id.getText(),(String)table.getValueAt(i,1)});
                     }
                     javax.swing.JOptionPane.showMessageDialog(null,"提交成功!");
-                    new Tools().resetTabLayout(tabbedPane,new Group().getMainPanel(),1);
                     new Tools().resetTabLayout(MainLayout.tabbedPane,new BookInfoLayout().getMainPanel(),4);
                     new Tools().resetTabLayout(MainLayout.tabbedPane,new CustomerLayout().getMainPanel(),6);
+                    MainLayout.tabbedPane.setSelectedIndex(0);
+                    new Tools().resetTabLayout(tabbedPane,new Group().getMainPanel(),1);
                 }
             });
         }
-
     }
 
 
