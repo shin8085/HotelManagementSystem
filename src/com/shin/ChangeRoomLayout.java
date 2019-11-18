@@ -60,6 +60,9 @@ public class ChangeRoomLayout {
                 String date=dateFormat.format(new Date());
                 database.Insert("room_changes",new String[]{field1.getText(),field2.getText(),(String)comboBox.getSelectedItem(),date});
                 javax.swing.JOptionPane.showMessageDialog(null,"提交成功!");
+                new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);
+                new Tools().resetTabLayout(MainLayout.tabbedPane,new CustomerLayout().getMainPanel(),6);
+                new Tools().resetTabLayout(MainLayout.tabbedPane,new ChangeRoomLayout().getMainPanel(),2);
             }
         });
         panel1_2.add(commit);

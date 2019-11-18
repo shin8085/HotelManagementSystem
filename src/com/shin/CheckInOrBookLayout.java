@@ -29,8 +29,8 @@ public class CheckInOrBookLayout {
     public Component getMainPanel(){
         Person person=new Person();
         Group group=new Group();
-        tabbedPane.addTab("散客",person.getPanelMain());
-        tabbedPane.addTab("团体",group.getPanelMain());
+        tabbedPane.addTab("散客",person.getMainPanel());
+        tabbedPane.addTab("团体",group.getMainPanel());
         tabbedPane.setTabPlacement(JTabbedPane.LEFT);
         return tabbedPane;
     }
@@ -69,7 +69,7 @@ public class CheckInOrBookLayout {
             panel_main.add(panel4);
             panel_main.add(commit);
         }
-        public Component getPanelMain(){
+        public Component getMainPanel(){
             return panel_main;
         }
         private void initInfoTable(){
@@ -381,6 +381,7 @@ public class CheckInOrBookLayout {
                     }
                     String date=dateFormat.format(new Date());
                     if(rb_check_in.isSelected()){
+                        //直接入住
                         for(int i=0;i<rowCount;i++){
                             if(i==0){
                                 database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],remark});
@@ -389,7 +390,12 @@ public class CheckInOrBookLayout {
                             }
                             database.Insert("check_in",new String[]{data[i][0],roomNum,date});
                         }
+                        //重置顾客信息页面
+                        new Tools().resetTabLayout(MainLayout.tabbedPane,new CheckInOrBookLayout().getMainPanel(),0);
+                        new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);
+                        new Tools().resetTabLayout(tabbedPane,new Person().getMainPanel(),0);
                     }else{
+                        //预定
                         for(int i=0;i<rowCount;i++){
                             if(i==0){
                                 database.Insert("customer",new String[]{data[i][0],data[i][1],data[i][2],data[i][3],remark});
@@ -398,27 +404,15 @@ public class CheckInOrBookLayout {
                             }
                             database.Insert("book",new String[]{data[i][0],roomNum,date});
                         }
+                        //重置预定信息页面
+                        new Tools().resetTabLayout(MainLayout.tabbedPane,new CheckInOrBookLayout().getMainPanel(),0);
+                        new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);
+                        new Tools().resetTabLayout(tabbedPane,new Person().getMainPanel(),0);
                     }
-
                     javax.swing.JOptionPane.showMessageDialog(null,"提交成功!");
-                    reset();
                 }
             });
         }
-        private void reset(){
-            panel_main.removeAll();
-            panel_main.repaint();
-            initInfoTable();
-            initRoomChoice();
-            initInfoTable();
-            TvipCard.setText("");
-            panel_main.add(panel1);
-            panel_main.add(panel2);
-            panel_main.add(panel3);
-            panel_main.add(commit);
-            panel_main.revalidate();
-        }
-
     }
 
     class Group{
@@ -464,7 +458,7 @@ public class CheckInOrBookLayout {
             checkInAndBook.add(book);
             panel_main.add(checkInAndBook);
         }
-        public Component getPanelMain(){
+        public Component getMainPanel(){
             return panel_main;
         }
         private void initInfoTable(){
@@ -643,6 +637,10 @@ public class CheckInOrBookLayout {
                         database.Insert("customer",new String[]{(String)table.getValueAt(i,1),(String)table.getValueAt(i,2),(String)table.getValueAt(i,3),(String)table.getValueAt(i,4),"团员"});
                         database.Insert("follow",new String[]{group_id.getText(),(String)table.getValueAt(i,1)});
                     }
+                    javax.swing.JOptionPane.showMessageDialog(null,"提交成功!");
+                    new Tools().resetTabLayout(tabbedPane,new Group().getMainPanel(),1);
+                    new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);
+                    new Tools().resetTabLayout(MainLayout.tabbedPane,new CustomerLayout().getMainPanel(),6);
                 }
             });
         }
@@ -665,6 +663,10 @@ public class CheckInOrBookLayout {
                         database.Insert("customer",new String[]{(String)table.getValueAt(i,1),(String)table.getValueAt(i,2),(String)table.getValueAt(i,3),(String)table.getValueAt(i,4),"团员"});
                         database.Insert("follow",new String[]{group_id.getText(),(String)table.getValueAt(i,1)});
                     }
+                    javax.swing.JOptionPane.showMessageDialog(null,"提交成功!");
+                    new Tools().resetTabLayout(tabbedPane,new Group().getMainPanel(),1);
+                    new Tools().resetTabLayout(MainLayout.tabbedPane,new BookInfoLayout().getMainPanel(),4);
+                    new Tools().resetTabLayout(MainLayout.tabbedPane,new CustomerLayout().getMainPanel(),6);
                 }
             });
         }

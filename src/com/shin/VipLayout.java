@@ -4,6 +4,7 @@ package com.shin;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -61,15 +62,15 @@ public class VipLayout {
                 String date=dateFormat.format(new Date());
                 database.Insert("vip_card",new String[]{field1.getText(),field2.getText(),field3.getText(),field4.getText(),field5.getText(),date});
                 javax.swing.JOptionPane.showMessageDialog(null,"提交成功!");
-                field1.setText("");
+                /*field1.setText("");
                 field2.setText("");
                 field3.setText("");
                 field4.setText("");
-                field5.setText("");
-                setId(); //初始化vip卡号
+                field5.setText("");*/
+                //setId(); //初始化vip卡号
                 //更新显示界面
-                tabbedPane.remove(1);
-                tabbedPane.addTab("已办理用户",getManaged());
+                new Tools().resetTabLayout(tabbedPane,getManaged(),1);
+                new Tools().resetTabLayout(tabbedPane,new VipLayout().getManage(),0);
             }
         });
         panel_main.add(panel1);

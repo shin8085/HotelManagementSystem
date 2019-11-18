@@ -16,7 +16,7 @@ public class BookInfoLayout {
     private JPanel panel_main;
     Database database=new Database();
 
-    public Component getPanelMain(){
+    public Component getMainPanel(){
         JPanel panel_main=new JPanel(new BorderLayout());
         String[] tableTitle={"身份证号","姓名","性别","电话号码","房间","预定时间","备注","入住","删除"};
         //String[][] rowdata={{"","","","","","","","√","X"}};
@@ -80,6 +80,7 @@ public class BookInfoLayout {
                     for (String r : rids) {
                         database.Insert("check_in", new String[]{idnum, r, date});
                     }
+                    new Tools().resetTabLayout(MainLayout.tabbedPane,new CustomerLayout().getMainPanel(),6);
                 }
                 else if(table.getSelectedColumn()==8){
                     //取消预约
@@ -107,6 +108,8 @@ public class BookInfoLayout {
                     }
                     model.removeRow(table.getSelectedRow());
                 }
+                new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);
+                MainLayout.tabbedPane.setSelectedIndex(4);
             }
         });
 
