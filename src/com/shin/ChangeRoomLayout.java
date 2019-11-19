@@ -66,16 +66,11 @@ public class ChangeRoomLayout {
             }
         });
         panel1_2.add(commit);
-        addComponent(panel1,new JComponent[]{label1,textField1,label2,textField2,label3,panel1_1,empty,panel1_2});
+        new Tools().addComponent(panel1,new JComponent[]{label1,textField1,label2,textField2,label3,panel1_1,empty,panel1_2});
         panel1.setBorder(BorderFactory.createEmptyBorder(100,0,0,0));
         panel1.setPreferredSize(new Dimension(450,230));
         panel_main.add(panel1);
         return panel_main;
-    }
-    private void addComponent(JPanel panel,JComponent [] components){
-        for(int i=0;i<components.length;i++){
-            panel.add(components[i]);
-        }
     }
     private JPanel panelTextFiled(JTextField textField){
         JPanel panel=new JPanel();

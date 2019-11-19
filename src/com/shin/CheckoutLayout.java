@@ -27,16 +27,11 @@ public class CheckoutLayout {
         JLabel empty2=new JLabel("");
         JButton commit=new JButton("提交");
         panel1_2.add(commit);
-        addComponent(panel1,new JComponent[]{label1,textField1,label2,textField2,label3,textField3,empty1,panel1_1,empty2,panel1_2});
+        new Tools().addComponent(panel1,new JComponent[]{label1,textField1,label2,textField2,label3,textField3,empty1,panel1_1,empty2,panel1_2});
         panel1.setBorder(BorderFactory.createEmptyBorder(100,0,0,0));
         panel1.setPreferredSize(new Dimension(450,260));
         panel_main.add(panel1);
         return panel_main;
-    }
-    private void addComponent(JPanel panel,JComponent [] components){
-        for(int i=0;i<components.length;i++){
-            panel.add(components[i]);
-        }
     }
     private JPanel panelTextFiled(){
         JPanel panel=new JPanel();

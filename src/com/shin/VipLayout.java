@@ -6,10 +6,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.tools.Tool;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,7 +49,7 @@ public class VipLayout {
         JPanel textField4=panelTextFiled(field4);
         JLabel label5=new JLabel("联系电话",JLabel.CENTER);
         JPanel textField5=panelTextFiled(field5);
-        addComponent(panel1,new JComponent[]{label1,textField1,label2,textField2,label3,textField3,label4,textField4,label5,textField5});
+        new Tools().addComponent(panel1,new JComponent[]{label1,textField1,label2,textField2,label3,textField3,label4,textField4,label5,textField5});
         setId();
         JButton commit=new JButton("提交");
         commit.addActionListener(new ActionListener() {
@@ -115,35 +112,15 @@ public class VipLayout {
         JTable table=new JTable(model);
         table.getTableHeader().setReorderingAllowed(false); //设置列不可移动
         table.getColumnModel().getColumn(6).setMaxWidth(50);
-        table.addMouseListener(new MouseListener() {
+        table.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
+            public void mouseClicked(MouseEvent e) {
                 if(table.getSelectedColumn()==6){
                     String idcard=(String)table.getValueAt(table.getSelectedRow(),0);
                     model.removeRow(table.getSelectedRow());
                     String sql="delete from vip_card where vid='"+idcard+"'";
                     database.UpdataInfo(sql);
                 }
-            }
-
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent mouseEvent) {
-
             }
         });
 
@@ -179,11 +156,6 @@ public class VipLayout {
         panel1.add(panel1_1);
         panel_main.add(panel1);
         return panel_main;
-    }
-    private void addComponent(JPanel panel,JComponent [] components){
-        for(int i=0;i<components.length;i++){
-            panel.add(components[i]);
-        }
     }
     private JPanel panelTextFiled(JTextField textField){
         JPanel panel=new JPanel();

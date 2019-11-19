@@ -112,35 +112,14 @@ public class CheckInOrBookLayout {
             table=new JTable(model);
             table.getTableHeader().setReorderingAllowed(false); //设置列不可移动
             table.getColumnModel().getColumn(5).setMaxWidth(50);
-            table.addMouseListener(new MouseListener() {
+            table.addMouseListener(new MouseAdapter() {
                 @Override
-                public void mouseClicked(MouseEvent mouseEvent) {
+                public void mouseClicked(MouseEvent e) {
                     if(table.getSelectedColumn()==5&&table.getSelectedRow()!=0){
                         model.removeRow(table.getSelectedRow());
                     }
                 }
-
-                @Override
-                public void mousePressed(MouseEvent mouseEvent) {
-
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent mouseEvent) {
-
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent mouseEvent) {
-
-                }
-
-                @Override
-                public void mouseExited(MouseEvent mouseEvent) {
-
-                }
             });
-
 
             DefaultTableCellRenderer cellRenderer=new DefaultTableCellRenderer(){
                 @Override
@@ -291,7 +270,7 @@ public class CheckInOrBookLayout {
             idcard_v=new JLabel("",JLabel.CENTER);
             JLabel name_k=new JLabel("姓名",JLabel.CENTER);
             JLabel name_v=new JLabel("",JLabel.CENTER);
-            addComponent(panel3_1,new JComponent[]{LvipCard,TvipCard,discount_k,discount_v,idcard_k,idcard_v,name_k,name_v});
+            new Tools().addComponent(panel3_1,new JComponent[]{LvipCard,TvipCard,discount_k,discount_v,idcard_k,idcard_v,name_k,name_v});
             panel3.add(panel3_1,BorderLayout.CENTER);
             border=BorderFactory.createTitledBorder(etched,"贵宾卡");
             panel3.setBorder(border);
@@ -497,35 +476,14 @@ public class CheckInOrBookLayout {
             table=new JTable(model);
             table.getTableHeader().setReorderingAllowed(false); //设置列不可移动
             table.getColumnModel().getColumn(5).setMaxWidth(50);
-            table.addMouseListener(new MouseListener() {
+            table.addMouseListener(new MouseAdapter() {
                 @Override
-                public void mouseClicked(MouseEvent mouseEvent) {
+                public void mouseClicked(MouseEvent e) {
                     if(table.getSelectedColumn()==5&&table.getSelectedRow()!=0){
                         model.removeRow(table.getSelectedRow());
                     }
                 }
-
-                @Override
-                public void mousePressed(MouseEvent mouseEvent) {
-
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent mouseEvent) {
-
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent mouseEvent) {
-
-                }
-
-                @Override
-                public void mouseExited(MouseEvent mouseEvent) {
-
-                }
             });
-
 
             DefaultTableCellRenderer cellRenderer=new DefaultTableCellRenderer(){
                 @Override
@@ -622,14 +580,14 @@ public class CheckInOrBookLayout {
                 e.printStackTrace();
             }
             JPanel panel2_1_1=new JPanel();
-            addComponent(panel2_1_1,new JComponent[]{map.get("201"),map.get("202"),map.get("203"),map.get("204")});
+            new Tools().addComponent(panel2_1_1,new JComponent[]{map.get("201"),map.get("202"),map.get("203"),map.get("204")});
             JLabel label2=new JLabel("双人间（120/天）",JLabel.CENTER);
             JPanel panel2_1_2=new JPanel();
-            addComponent(panel2_1_2,new JComponent[]{map.get("301"),map.get("302"),map.get("303"),map.get("304")});
+            new Tools().addComponent(panel2_1_2,new JComponent[]{map.get("301"),map.get("302"),map.get("303"),map.get("304")});
             JLabel label3=new JLabel("豪华套间（200/天）",JLabel.CENTER);
             JPanel panel2_1_3=new JPanel();
-            addComponent(panel2_1_3,new JComponent[]{map.get("401"),map.get("402"),map.get("403"),map.get("404")});
-            addComponent(panel2_1,new JComponent[]{head1,head2,label1,panel2_1_1,label2,panel2_1_2,label3,panel2_1_3});
+            new Tools().addComponent(panel2_1_3,new JComponent[]{map.get("401"),map.get("402"),map.get("403"),map.get("404")});
+            new Tools().addComponent(panel2_1,new JComponent[]{head1,head2,label1,panel2_1_1,label2,panel2_1_2,label3,panel2_1_3});
             panel3.add(panel2_1);
             border=BorderFactory.createTitledBorder(etched,"客房信息");
             panel3.setBorder(border);
@@ -729,13 +687,6 @@ public class CheckInOrBookLayout {
                     new Tools().resetTabLayout(tabbedPane,new Group().getMainPanel(),1);
                 }
             });
-        }
-    }
-
-
-    private void addComponent(JPanel panel,JComponent [] components){
-        for(int i=0;i<components.length;i++){
-            panel.add(components[i]);
         }
     }
     private void mapPut(Map<String ,JCheckBox> map,String [] s){

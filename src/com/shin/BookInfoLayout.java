@@ -19,7 +19,6 @@ public class BookInfoLayout {
     public Component getMainPanel(){
         JPanel panel_main=new JPanel(new BorderLayout());
         String[] tableTitle={"身份证号","姓名","性别","电话号码","房间","预定时间","备注","入住","删除"};
-        //String[][] rowdata={{"","","","","","","","√","X"}};
         String[][] rowdata=new String[1][];
         try {
             ResultSet rowCount=database.QueryInfo("select count(distinct idnum) as count from book");

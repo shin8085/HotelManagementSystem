@@ -13,4 +13,9 @@ public class Tools {
         tabbedPane.insertTab(title,null,component,null,index);
         tabbedPane.setSelectedIndex(index);
     }
+    public void addComponent(JPanel panel,JComponent [] components){
+        for(int i=0;i<components.length;i++){
+            panel.add(components[i]);
+        }
+    }
 }
