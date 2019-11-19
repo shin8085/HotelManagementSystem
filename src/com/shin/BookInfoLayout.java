@@ -84,16 +84,13 @@ public class BookInfoLayout {
                 }
                 else if(table.getSelectedColumn()==8){
                     //取消预约
-                    //散客 customer book
-                    //团队 customer _group follow book
-                    if(!table.getValueAt(table.getSelectedRow(),6).equals("领队")){
-                        //散客
-                        database.UpdataInfo("delete from book where idnum="+idnum);
-                        database.UpdataInfo("delete from customer where idnum="+idnum);
-                    }else{
+                    //散客 customer book deposit
+                    //团队 customer _group follow book deposit
+                    database.UpdataInfo("delete from book where idnum="+idnum);
+                    database.UpdataInfo("delete from deposit where idnum="+idnum);
+                    database.UpdataInfo("delete from customer where idnum="+idnum);
+                    if(table.getValueAt(table.getSelectedRow(),6).equals("领队")){
                         //团队
-                        database.UpdataInfo("delete from book where idnum="+idnum);
-                        database.UpdataInfo("delete from customer where idnum="+idnum);
                         ResultSet men_idnums=database.QueryInfo("select men_idnum from follow where gid=(select gid from _group where cap_idnum="+idnum+")");
                         database.UpdataInfo("delete from follow where gid=(select gid from _group where cap_idnum="+idnum+")");
                         try{

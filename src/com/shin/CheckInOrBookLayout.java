@@ -217,7 +217,7 @@ public class CheckInOrBookLayout {
             comboBox=new JComboBox();
             comboBox.setPreferredSize(new Dimension(200,30));
             try{
-                ResultSet resultSet=database.QueryInfo("select rid from room where rtype='单人间' and rid not in (select rid from check_in)");
+                ResultSet resultSet=database.QueryInfo("select rid from room where rtype='单人间' and rid not in (select rid from check_in) and rid not in (select rid from book)");
                 while(resultSet.next()){
                     comboBox.addItem(resultSet.getString("rid"));
                 }
@@ -265,7 +265,7 @@ public class CheckInOrBookLayout {
                     }
                     Vector<String> results=new Vector<>();
                     try{
-                        ResultSet resultSet=database.QueryInfo("select rid from room where rtype='"+type+"' and rid not in (select rid from check_in)");
+                        ResultSet resultSet=database.QueryInfo("select rid from room where rtype='"+type+"' and rid not in (select rid from check_in) and rid not in (select rid from book)");
                         comboBox.removeAllItems();
                         while(resultSet.next()){
                             comboBox.addItem(resultSet.getString("rid"));
@@ -417,9 +417,10 @@ public class CheckInOrBookLayout {
                         }
                         new Tools().resetTabLayout(MainLayout.tabbedPane,new BookInfoLayout().getMainPanel(),4);
                     }
+                    new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);
+                    MainLayout.tabbedPane.setSelectedIndex(0);
                     javax.swing.JOptionPane.showMessageDialog(null,"提交成功!");
                     new Tools().resetTabLayout(tabbedPane,new Person().getMainPanel(),0);
-                    new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);
                 }
             });
         }

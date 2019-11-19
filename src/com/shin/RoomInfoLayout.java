@@ -16,6 +16,7 @@ public class RoomInfoLayout {
             ResultSet resultSet=database.QueryInfo("select rid,rtype from room");
             while(resultSet.next()){
                 JButton button=new JButton("<html>"+resultSet.getString("rid")+"<br>"+resultSet.getString("rtype")+"</html>");
+                button.setSelected(false);
                 ResultSet checkIn=database.QueryInfo("select * from check_in where rid="+resultSet.getString("rid"));
                 ResultSet book=database.QueryInfo("select * from book where rid="+resultSet.getString("rid"));
                 if(checkIn.next()){
