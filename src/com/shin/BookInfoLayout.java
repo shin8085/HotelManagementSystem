@@ -21,8 +21,8 @@ public class BookInfoLayout {
         String[] tableTitle={"身份证号","姓名","性别","电话号码","房间","预定时间","备注","入住","删除"};
         String[][] rowdata=new String[1][];
         try {
-            ResultSet rowCount=database.QueryInfo("select count(distinct idnum) as count from book");
-            ResultSet resultSet=database.QueryInfo("select * from customer where idnum in (select idnum from book)");
+            ResultSet rowCount=database.QueryInfo("select count(distinct idnum) as count from book where idnum not in (select idnum from customer where remark='跟随入住')");
+            ResultSet resultSet=database.QueryInfo("select * from customer where idnum in (select idnum from book) and remark<>'跟随入住'");
             int row=0;
             if(rowCount.next()){
                 String data[][]=new String[rowCount.getInt("count")][];
@@ -85,23 +85,12 @@ public class BookInfoLayout {
                     //取消预约
                     //散客 customer book deposit
                     //团队 customer _group follow book deposit
-                    database.UpdataInfo("delete from book where idnum="+idnum);
-                    database.UpdataInfo("delete from deposit where idnum="+idnum);
-                    database.UpdataInfo("delete from customer where idnum="+idnum);
                     if(table.getValueAt(table.getSelectedRow(),6).equals("领队")){
-                        //团队
-                        ResultSet men_idnums=database.QueryInfo("select men_idnum from follow where gid=(select gid from _group where cap_idnum="+idnum+")");
-                        database.UpdataInfo("delete from follow where gid=(select gid from _group where cap_idnum="+idnum+")");
-                        try{
-                            while(men_idnums.next()){
-                                System.out.println(men_idnums.getString("men_idnum"));
-                                database.UpdataInfo("delete from customer where idnum="+men_idnums.getString("men_idnum"));
-                            }
-                        }catch (Exception e1){
-                            e1.printStackTrace();
-                        }
-                        database.UpdataInfo("delete from _group where cap_idnum="+idnum);
+                        database.UpdataInfo("delete from customer where idnum in (select men_idnum from follow where gid=(select gid from _group where cap_idnum="+idnum+"))");
+                    }else{
+                        database.UpdataInfo("delete from customer where idnum in (select idnum from book where rid=(select rid from book where idnum="+idnum+"))");
                     }
+                    database.UpdataInfo("delete from customer where idnum="+idnum);
                     model.removeRow(table.getSelectedRow());
                 }
                 new Tools().resetTabLayout(MainLayout.tabbedPane,new RoomInfoLayout().getMainPanel(),5);

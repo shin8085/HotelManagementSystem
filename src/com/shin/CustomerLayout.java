@@ -3,6 +3,8 @@ package com.shin;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -74,6 +76,8 @@ public class CustomerLayout {
             }
         };
         JTable table=new JTable(model);
+        TableRowSorter<TableModel> tableRowSorter=new TableRowSorter<TableModel>(model);
+        table.setRowSorter(tableRowSorter);
         table.getTableHeader().setReorderingAllowed(false); //设置列不可移动
         DefaultTableCellRenderer cellRenderer=new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.CENTER);
