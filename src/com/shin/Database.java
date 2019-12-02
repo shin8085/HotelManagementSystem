@@ -46,8 +46,30 @@ public class Database {
                 data+=values[i];
         }
         String sql="insert into "+target+" values('"+data+"')";
-        try {
-            UpdataInfo(sql);
+        UpdataInfo(sql);
+    }
+    //开启事务
+    public void startTransaction(){
+        try{
+            conn.setAutoCommit(false);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    //提交事务
+    public void commitTransaction(){
+        try{
+            conn.commit();
+            conn.setAutoCommit(true); //恢复默认状态
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    //回滚事务
+    public void rollbackTransaction(){
+        try{
+            conn.rollback();
+            conn.setAutoCommit(true); //恢复默认状态
         }catch (Exception e){
             e.printStackTrace();
         }

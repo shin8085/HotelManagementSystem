@@ -75,7 +75,6 @@ CREATE TABLE check_out(
     idnum char(18) NOT NULL COMMENT '身份证号',
     rid varchar(3) NOT NULL COMMENT '房间号',
     cotime DATETIME NOT NULL COMMENT '退房时间',
-    CONSTRAINT cout_customer FOREIGN KEY(idnum) REFERENCES customer(idnum) ON DELETE CASCADE,
     CONSTRAINT cout_room FOREIGN KEY(rid) REFERENCES room(rid) ON DELETE CASCADE
 );
 
@@ -83,7 +82,6 @@ CREATE TABLE check_out_normal(
     idnum char(18) NOT NULL COMMENT '身份证号',
     rid varchar(3) NOT NULL COMMENT '房间号',
     conprice int NOT NULL COMMENT '结账金额',
-    CONSTRAINT con_customer FOREIGN KEY(idnum) REFERENCES customer(idnum) ON DELETE CASCADE,
     CONSTRAINT con_room FOREIGN KEY(rid) REFERENCES room(rid) ON DELETE CASCADE
 );
 
@@ -91,7 +89,6 @@ CREATE TABLE chect_out_credit(
     idnum char(18) NOT NULL COMMENT '身份证号',
     rid varchar(3) NOT NULL COMMENT '房间号',
     cocprice int NOT NULL COMMENT '挂账金额',
-    CONSTRAINT coc_customer FOREIGN KEY(idnum) REFERENCES customer(idnum) ON DELETE CASCADE,
     CONSTRAINT coc_room FOREIGN KEY(rid) REFERENCES room(rid) ON DELETE CASCADE
 ); 
 

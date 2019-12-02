@@ -638,8 +638,8 @@ public class CheckInOrBookLayout {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     int rowCount=table.getRowCount();
-                    database.Insert("_group",new String[]{group_id.getText(),(String)table.getValueAt(0,1),Integer.toString(rowCount)});
                     database.Insert("customer",new String[]{(String)table.getValueAt(0,1),(String)table.getValueAt(0,2),(String)table.getValueAt(0,3),(String)table.getValueAt(0,4),"领队"});
+                    database.Insert("_group",new String[]{group_id.getText(),(String)table.getValueAt(0,1),Integer.toString(rowCount)});
                     database.Insert("deposit",new String[]{(String)table.getValueAt(0,1),deposit_v.getText()});
                     SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String date=dateFormat.format(new Date());
