@@ -12,6 +12,7 @@ public class MainLayout {
     public MainLayout(){
         frame_main=new JFrame("宾馆管理系统");
         frame_main.setSize(1200,700);
+        frame_main.setResizable(false);
         tabbedPane =new JTabbedPane();
     }
     private void CreateWindow(){

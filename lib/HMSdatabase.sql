@@ -20,6 +20,7 @@ CREATE TABLE _group(
 CREATE TABLE follow(
     gid int NOT NULL COMMENT '团队编号',
     men_idnum char(18) NOT NULL COMMENT '成员身份证号',
+    PRIMARY KEY(gid,men_idnum),
     CONSTRAINT follow_group FOREIGN KEY(gid) REFERENCES _group(gid) ON DELETE CASCADE,
     CONSTRAINT follow_customer FOREIGN KEY(men_idnum) REFERENCES customer(idnum) ON DELETE CASCADE
 );
@@ -43,6 +44,7 @@ CREATE TABLE check_in(
     idnum char(18) NOT NULL COMMENT '身份证号',
     rid varchar(3) NOT NULL COMMENT '房间号',
     citime DATETIME NOT NULL COMMENT '入住时间',
+    PRIMARY KEY(idnum,rid),
     CONSTRAINT cin_customer FOREIGN KEY(idnum) REFERENCES customer(idnum) ON DELETE CASCADE,
     CONSTRAINT cin_room FOREIGN KEY(rid) REFERENCES room(rid) ON DELETE CASCADE
 );
@@ -51,6 +53,7 @@ CREATE TABLE book(
     idnum char(18) NOT NULL COMMENT '身份证号',
     rid varchar(3) NOT NULL COMMENT '房间号',
     btime DATETIME NOT NULL COMMENT '预定时间',
+    PRIMARY KEY(idnum,rid),
     CONSTRAINT book_customer FOREIGN KEY(idnum) REFERENCES customer(idnum) ON DELETE CASCADE,
     CONSTRAINT book_room FOREIGN KEY(rid) REFERENCES room(rid) ON DELETE CASCADE
 );
@@ -60,13 +63,14 @@ CREATE TABLE room_changes(
     orid varchar(5) NOT NULL COMMENT '旧房间号',
     nrid varchar(5) NOT NULL COMMENT '新房间号',
     rtime DATETIME NOT NULL COMMENT '换房时间',
+    PRIMARY KEY(idnum,orid,nrid),
     CONSTRAINT rcs_customer FOREIGN KEY(idnum) REFERENCES customer(idnum) ON DELETE CASCADE,
     CONSTRAINT orcs_room FOREIGN KEY(orid) REFERENCES room(rid) ON DELETE CASCADE,
     CONSTRAINT nrcs_room FOREIGN KEY(nrid) REFERENCES room(rid) ON DELETE CASCADE
 );
 
 CREATE TABLE deposit(
-    idnum char(18) NOT NULL COMMENT '身份证号',
+    idnum char(18) NOT NULL PRIMARY KEY COMMENT '身份证号',
     dprice int NOT NULL COMMENT '押金',
     CONSTRAINT deposit_customer FOREIGN KEY(idnum) REFERENCES customer(idnum) ON DELETE CASCADE
 );
@@ -75,6 +79,7 @@ CREATE TABLE check_out(
     idnum char(18) NOT NULL COMMENT '身份证号',
     rid varchar(3) NOT NULL COMMENT '房间号',
     cotime DATETIME NOT NULL COMMENT '退房时间',
+    PRIMARY KEY(idnum,rid),
     CONSTRAINT cout_room FOREIGN KEY(rid) REFERENCES room(rid) ON DELETE CASCADE
 );
 
@@ -82,6 +87,7 @@ CREATE TABLE check_out_normal(
     idnum char(18) NOT NULL COMMENT '身份证号',
     rid varchar(3) NOT NULL COMMENT '房间号',
     conprice int NOT NULL COMMENT '结账金额',
+    PRIMARY KEY(idnum,rid),
     CONSTRAINT con_room FOREIGN KEY(rid) REFERENCES room(rid) ON DELETE CASCADE
 );
 
@@ -89,15 +95,11 @@ CREATE TABLE chect_out_credit(
     idnum char(18) NOT NULL COMMENT '身份证号',
     rid varchar(3) NOT NULL COMMENT '房间号',
     cocprice int NOT NULL COMMENT '挂账金额',
+    PRIMARY KEY(idnum,rid),
     CONSTRAINT coc_room FOREIGN KEY(rid) REFERENCES room(rid) ON DELETE CASCADE
 ); 
 
 /*插入测试数据*/
-INSERT INTO customer VALUES("352100199809062635","张凤","女","15269584235","无");
-INSERT INTO customer VALUES("35210019971206894X","林华","男","13956425892","无");
-INSERT INTO customer VALUES("352100199809062315","李华","男","15269584235","无");
-
-INSERT INTO vip_card VALUES("1203000001","352100199809062315","李华","男","15269584235","2019-11-7 16:07:23");
 
 INSERT INTO room VALUES("201","单人间",100),("202","单人间",100),("203","单人间",100),("204","单人间",100);
 INSERT INTO room VALUES("301","双人间",140),("302","双人间",140),("303","双人间",140),("304","双人间",140);

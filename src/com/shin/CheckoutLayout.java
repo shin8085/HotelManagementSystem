@@ -98,6 +98,8 @@ public class CheckoutLayout {
                     database.startTransaction();
                     //删除队员信息
                     database.UpdataInfo("delete from customer where idnum in (select men_idnum from follow where gid=(select gid from _group where cap_idnum="+idnum+"))");
+                    //删除跟随入住的顾客
+                    database.UpdataInfo("delete from customer where idnum in (select idnum from check_in where rid=(select rid from check_in where idnum="+idnum+"))");
                     //删除领队信息
                     database.UpdataInfo("delete from customer where idnum="+idnum);
                     while(rids.next()){
