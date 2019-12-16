@@ -3,17 +3,17 @@ CREATE DATABASE hms_database;
 use hms_database;
 
 CREATE TABLE customer(
-    idnum char(18) NOT NULL PRIMARY KEY COMMENT '身份证号',
+    idnum char(18) NOT NULL PRIMARY KEY COMMENT '身份证号' CHECK (LENGTH(idnum)=18),
     cname varchar(10) NOT NULL COMMENT '姓名',
-    sex char(1) NOT NULL COMMENT '性别',
+    sex char(1) NOT NULL COMMENT '性别' CHECK (sex IN ('男','女')),
     telphone varchar(12) NOT NULL COMMENT '电话号码',
     remark varchar(20) DEFAULT "无"
 );
 
 CREATE TABLE _group(
-    gid int NOT NULL PRIMARY KEY COMMENT '团队编号',
+    gid int NOT NULL PRIMARY KEY COMMENT '团队编号' CHECK (gid>0),
     cap_idnum char(18) NOT NULL COMMENT '领队身份证号',
-    people_num int(3) NOT NULL COMMENT '团队人数',
+    people_num int(3) NOT NULL COMMENT '团队人数' CHECK (people_num>0),
     CONSTRAINT _group_customer FOREIGN KEY(cap_idnum) REFERENCES customer(idnum) ON DELETE CASCADE
 );
 
@@ -28,14 +28,14 @@ CREATE TABLE follow(
 CREATE TABLE room(
     rid varchar(3) NOT NULL PRIMARY KEY COMMENT '房间号',
     rtype varchar(10) NOT NULL COMMENT '房间类型',
-    price int NOT NULL COMMENT '价格'
+    price int NOT NULL COMMENT '价格' CHECK (price>0)
 );
 
 CREATE TABLE vip_card(
     vid varchar(20) NOT NULL PRIMARY KEY COMMENT '卡号',
-    idnum char(18) NOT NULL COMMENT '身份证号',
+    idnum char(18) NOT NULL COMMENT '身份证号' CHECK (LENGTH(idnum)=18),
     cname varchar(10) NOT NULL COMMENT '姓名',
-    sex char(1) NOT NULL COMMENT '性别',
+    sex char(1) NOT NULL COMMENT '性别' CHECK (sex IN ('男','女')),
     telphone varchar(12) NOT NULL COMMENT '电话号码',
     mtime DATETIME NOT NULL COMMENT '办理日期'
 );
@@ -71,7 +71,7 @@ CREATE TABLE room_changes(
 
 CREATE TABLE deposit(
     idnum char(18) NOT NULL PRIMARY KEY COMMENT '身份证号',
-    dprice int NOT NULL COMMENT '押金',
+    dprice int NOT NULL COMMENT '押金' CHECK (dprice>0),
     CONSTRAINT deposit_customer FOREIGN KEY(idnum) REFERENCES customer(idnum) ON DELETE CASCADE
 );
 
@@ -86,7 +86,7 @@ CREATE TABLE check_out(
 CREATE TABLE check_out_normal(
     idnum char(18) NOT NULL COMMENT '身份证号',
     rid varchar(3) NOT NULL COMMENT '房间号',
-    conprice int NOT NULL COMMENT '结账金额',
+    conprice int NOT NULL COMMENT '结账金额' CHECK (conprice>0),
     PRIMARY KEY(idnum,rid),
     CONSTRAINT con_room FOREIGN KEY(rid) REFERENCES room(rid) ON DELETE CASCADE
 );
@@ -94,7 +94,7 @@ CREATE TABLE check_out_normal(
 CREATE TABLE chect_out_credit(
     idnum char(18) NOT NULL COMMENT '身份证号',
     rid varchar(3) NOT NULL COMMENT '房间号',
-    cocprice int NOT NULL COMMENT '挂账金额',
+    cocprice int NOT NULL COMMENT '挂账金额' CHECK (cocprice>0),
     PRIMARY KEY(idnum,rid),
     CONSTRAINT coc_room FOREIGN KEY(rid) REFERENCES room(rid) ON DELETE CASCADE
 ); 

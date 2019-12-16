@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class BookInfoLayout {
-    private JPanel panel_main;
+
     Database database=new Database();
 
     public Component getMainPanel(){
